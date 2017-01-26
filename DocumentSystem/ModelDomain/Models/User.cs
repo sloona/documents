@@ -15,7 +15,7 @@ namespace Models
         {
             get
             {
-                return FirstName + " " + LastName;
+                return $"{LastName} {FirstName}";
             }
         }
         public virtual ISet<Document> Documents { get; set; }

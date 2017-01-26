@@ -1,18 +1,24 @@
 ﻿@model IEnumerable<Models.Document>
 
+@ViewBag.sortColumn
+
+<h3>Список документов</h3>
 <p>
-    @Html.ActionLink("Create New", "Create")
+ @Html.ActionLink("Добавить документ", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Id)
+            @Html.ActionLink("Id", "Index", new { sortColumn = "Id" })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.ActionLink("Название", "Index", new { sortColumn = "Title" })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Author)
+           @Html.ActionLink("Автор", "Index", new { sortColumn = "Author" })
+        </th>
+        <th>
+            @Html.ActionLink("Дата", "Index", new { sortColumn = "CreationDate" })
         </th>
     </tr>
 
@@ -23,11 +29,14 @@
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                @Html.DisplayFor(modelItem => item.ShortName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Author.FullName)
             </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </th>
         </tr>
     }
 

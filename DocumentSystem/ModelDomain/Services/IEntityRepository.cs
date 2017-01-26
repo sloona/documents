@@ -6,9 +6,9 @@ namespace Services
         where T : class
     {
 
-        //void Update(T operResult);
+        void Update(T operResult);
 
-        //T Create();
+        T Create();
 
         IEnumerable<T> GetAll();
 

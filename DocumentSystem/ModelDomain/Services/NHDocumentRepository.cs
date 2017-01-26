@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Models;
-using DomainModel.Helpers;
+using Helpers;
 using NHibernate.Criterion;
 
 namespace Services
@@ -18,6 +18,33 @@ namespace Services
                 users = criteria.List<Document>().ToList();
             }
             return users;
+        }
+
+        public Document Create()
+        {
+            return new Document() { Id = 0 };
+        }
+
+        public void Update(Document document)
+        {
+            using (var session = NHibernateHelper.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        session.Save(document);
+
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+
+                    transaction.Commit();
+                }
+            }
         }
     }
 }

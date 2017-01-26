@@ -3,7 +3,7 @@ using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 
-namespace DomainModel.Helpers
+namespace Helpers
 {
     public class NHibernateHelper
     {
