@@ -41,16 +41,28 @@ namespace Web.Controllers
 
         public ActionResult SaveDocument(DocumentModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("Create", model);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View("Create", model);
+            //}
 
             var document = repository.Create();
 
+            if (model.Attachment != null)
+            {
+                if (model.Attachment.ContentLength > 0)
+                {
+                    string fileName = System.IO.Path.GetFileName(model.Attachment.FileName);
+                    document.Path = fileName;
+                    model.Attachment.SaveAs(Server.MapPath("~/App_Data/Files/" + fileName));
+                }
+            }
+                
+
             document.Title = model.Name;
 
-            document.CreationDate = DateTime.Today;
+            document.CreationDate = DateTime.Now;
+
 
             using (var session = NHibernateHelper.OpenSession())
             {

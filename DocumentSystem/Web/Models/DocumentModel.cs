@@ -13,6 +13,9 @@ namespace Web.Models
         [Required]
         public string Name { get; set; }
 
+        [DisplayName("Файл")]
+        [Required]
+        public HttpPostedFileBase Attachment { get; set; }
 
         public object[] GetParametrs()
         {
