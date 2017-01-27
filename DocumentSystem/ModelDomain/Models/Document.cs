@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
+using System.Web.UI.WebControls;
+
+
 
 namespace Models
 {
@@ -24,7 +28,17 @@ namespace Models
                 return (Title.Length > viewlenght) ? $"{Title.Substring(0, viewlenght)}..." : Title;
             }
         }
-        public virtual string Path { get; set; }
+        public virtual string FileName { get; set; }
+        [TypeConverter(typeof(TargetConverter))]
+        [DisplayName("Документ")]
+        public virtual string Path
+        {
+            //get { return   HttpContext.Current.Server.MapPath("~/App_Data/Files/" + FileName); }
+            get { return $"/App_Data/Files/{FileName}"; }
+        }
+
+
+
     }
 
 }

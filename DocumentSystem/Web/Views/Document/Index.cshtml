@@ -6,6 +6,7 @@
 <p>
  @Html.ActionLink("Добавить документ", "Create")
 </p>
+
 <table class="table">
     <tr>
         <th>
@@ -19,6 +20,9 @@
         </th>
         <th>
             @Html.ActionLink("Дата", "Index", new { sortColumn = "CreationDate" })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Path)
         </th>
     </tr>
 
@@ -36,6 +40,11 @@
             </td>
             <th>
                 @Html.DisplayFor(modelItem => item.CreationDate)
+            </th>
+            <th>
+                <a href="@item.Path">
+                    <img src="/App_Data/Content/images/icon-download.png" alt="Файл" style="width:42px;height:42px;border:0;">
+                </a> 
             </th>
         </tr>
     }

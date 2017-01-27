@@ -229,6 +229,7 @@
     </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\icon-download.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -290,6 +291,8 @@
     <Content Include="Views\Document\Index.cshtml" />
     <Content Include="Views\Document\Create.cshtml" />
     <Content Include="Views\Document\Success.cshtml" />
+    <Content Include="Views\Document\Search.cshtml" />
+    <Content Include="Views\Document\DocumentSearch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

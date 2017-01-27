@@ -6,6 +6,7 @@
     </id>
     <property name="Title"/>
     <property name="CreationDate"/>
+    <property name="FileName"/>
     <many-to-one name="Author" class="User" column="UserId" lazy="false" cascade="save-update"/>
   </class>
 </hibernate-mapping>

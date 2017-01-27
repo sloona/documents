@@ -18,6 +18,17 @@ namespace Web.Controllers
             repository = new NHDocumentRepository();
         }
 
+        public ActionResult SearchForm()
+        {
+            return View("Search");
+        }
+        public ActionResult Search(DocumentSearchModel searchModel)
+        {
+            IEnumerable<Document> documents;
+            documents = repository.Search(searchModel);
+            return View("Index",documents);
+        }
+
         public ActionResult Index(string sortColumn)
         {
             IEnumerable<Document> documents;
@@ -30,7 +41,6 @@ namespace Web.Controllers
                 documents = repository.GetAll().OrderBy(p => p.GetType().GetProperty(sortColumn ?? "CreationDate").GetValue(p, null));
             }
             
-            //documents = repository.GetAll().OrderBy(d => d.Author);
             return View(documents);
         }
 
@@ -41,10 +51,11 @@ namespace Web.Controllers
 
         public ActionResult SaveDocument(DocumentModel model)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View("Create", model);
-            //}
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Error = "Неправильно заполнены данные";
+                return View("Create", model);
+            }
 
             var document = repository.Create();
 
@@ -53,7 +64,7 @@ namespace Web.Controllers
                 if (model.Attachment.ContentLength > 0)
                 {
                     string fileName = System.IO.Path.GetFileName(model.Attachment.FileName);
-                    document.Path = fileName;
+                    document.FileName = fileName;
                     model.Attachment.SaveAs(Server.MapPath("~/App_Data/Files/" + fileName));
                 }
             }
@@ -70,8 +81,8 @@ namespace Web.Controllers
             }
             repository.Update(document);
 
-            ViewData.Model = $"Документ был успешно сохранен";
-            return View("Success");
+            ViewBag.Success = $"Документ был успешно сохранен";
+            return View("Create", model);
         }
 
     }

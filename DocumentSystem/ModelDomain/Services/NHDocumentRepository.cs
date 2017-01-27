@@ -3,6 +3,7 @@ using System.Linq;
 using Models;
 using Helpers;
 using NHibernate.Criterion;
+using System;
 
 namespace Services
 {
@@ -10,14 +11,14 @@ namespace Services
     {
         public IEnumerable<Document> GetAll()
         {
-            var users = new List<Document>();
+            var documents = new List<Document>();
             using (var session = NHibernateHelper.OpenSession())
             {
                 var criteria = session.CreateCriteria(typeof(Document));
                 //criteria.Add(Restrictions.Ge("Id",3));
-                users = criteria.List<Document>().ToList();
+                documents = criteria.List<Document>().ToList();
             }
-            return users;
+            return documents;
         }
 
         public Document Create()
@@ -45,6 +46,24 @@ namespace Services
                     transaction.Commit();
                 }
             }
+        }
+
+        public IEnumerable<Document> Search(DocumentSearchModel searchModel)
+        {
+            
+            var documents = new List<Document>();
+            using (var session = NHibernateHelper.OpenSession())
+            {
+                var criteria = session.CreateCriteria(typeof(Document));
+                documents = criteria.List<Document>().ToList();
+                if (searchModel.Id.HasValue)
+                    documents = documents.Where(d => d.Id == searchModel.Id).ToList();
+                if (!String.IsNullOrEmpty(searchModel.Title))
+                    documents = documents.Where(d => d.Title.ToLower().Contains(searchModel.Title.ToLower())).ToList();
+                if(!String.IsNullOrEmpty(searchModel.Author))
+                    documents = documents.Where(d => d.Author.FullName.ToLower().Contains(searchModel.Author.ToLower())).ToList();
+            }
+            return documents;
         }
     }
 }
