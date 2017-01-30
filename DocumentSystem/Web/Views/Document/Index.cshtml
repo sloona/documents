@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Models.Document>
+
+@ViewBag.sortColumn
+@ViewBag.Login
+
+<h3>Список документов</h3>
+<p>
+ @Html.ActionLink("Добавить документ", "Create")
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Id", "Index", new { sortColumn = "Id" })
+        </th>
+        <th>
+            @Html.ActionLink("Название", "Index", new { sortColumn = "Title" })
+        </th>
+        <th>
+           @Html.ActionLink("Автор", "Index", new { sortColumn = "Author" })
+        </th>
+        <th>
+            @Html.ActionLink("Дата", "Index", new { sortColumn = "CreationDate" })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Path)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShortName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author.FullName)
+            </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </th>
+            <th>
+                <a href="@item.Path">
+                    <img src="/Content/images/icon-download.png" alt="Файл" style="width:25px;height:25px;border:0;">
+                </a> 
+            </th>
+        </tr>
+    }
+
+</table>
