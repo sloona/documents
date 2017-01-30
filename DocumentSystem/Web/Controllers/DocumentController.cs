@@ -32,9 +32,9 @@ namespace Web.Controllers
         //[Authorize]
         public ActionResult Index(string sortColumn)
         {
-            if (User.Identity.IsAuthenticated)
+            //if (HttpContext.User.Identity.IsAuthenticated)
             {
-                ViewBag.Login = "Ваш логин: " + User.Identity.Name;
+                ViewBag.Login = "Ваш логин: " + HttpContext.User.Identity.Name;
             }
             IEnumerable<Document> documents;
             if (sortColumn == "Author")

@@ -69,7 +69,7 @@ namespace Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl = "/Document")
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace Web.Controllers
             var result = CheckUser(model.Login, model.Password);
             if (result)
             {
-                FormsAuthentication.SetAuthCookie(model.Login, true);
+                FormsAuthentication.SetAuthCookie(model.Login, false);
                 return RedirectToLocal(returnUrl);
             }
 
@@ -413,7 +413,9 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            FormsAuthentication.SignOut();
+            Session.Abandon();
             return RedirectToAction("Index", "Home");
         }
 

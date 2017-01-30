@@ -10,6 +10,10 @@ namespace Web.Controllers
     {
         public ActionResult Index()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.Login = "Ваш логин: " + HttpContext.User.Identity.Name;
+            }
             return View();
         }
 
