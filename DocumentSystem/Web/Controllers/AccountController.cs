@@ -80,7 +80,8 @@ namespace Web.Controllers
             if (result)
             {
                 FormsAuthentication.SetAuthCookie(model.Login, false);
-                return RedirectToLocal(returnUrl);
+                //return RedirectToLocal(returnUrl);
+                return RedirectToAction("Index", "Document");
             }
 
             ModelState.AddModelError("", "Неудачная попытка входа.");

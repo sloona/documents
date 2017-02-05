@@ -1,10 +1,10 @@
 bin
 obj
 packages
-hibernate.cfg.xml
-Web.config
-mdf
-ldf
+#hibernate.cfg.xml
+#Web.config
+#mdf
+#ldf
 Files
 vs
 .vs

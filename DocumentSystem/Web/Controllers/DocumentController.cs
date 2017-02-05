@@ -9,7 +9,7 @@ using Web.Models;
 
 namespace Web.Controllers
 {
-    
+
     public class DocumentController : Controller
     {
         private IDocumentRepository repository { get; set; }
@@ -27,7 +27,7 @@ namespace Web.Controllers
         {
             IEnumerable<Document> documents;
             documents = repository.Search(searchModel);
-            return View("Index",documents);
+            return View("Index", documents);
         }
         //[Authorize]
         public ActionResult Index(string sortColumn)
@@ -45,7 +45,7 @@ namespace Web.Controllers
             {
                 documents = repository.GetAll().OrderBy(p => p.GetType().GetProperty(sortColumn ?? "CreationDate").GetValue(p, null));
             }
-            
+
             return View(documents);
         }
 
@@ -73,7 +73,7 @@ namespace Web.Controllers
                     model.Attachment.SaveAs(Server.MapPath("~/Files/" + fileName));
                 }
             }
-                
+
 
             document.Title = model.Name;
 
@@ -82,8 +82,12 @@ namespace Web.Controllers
 
             using (var session = NHibernateHelper.OpenSession())
             {
-                document.Author = session.Get<User>(2);
+                document.Author = session.QueryOver<User>()
+                    .And(u=> u.Login == HttpContext.User.Identity.Name)
+                    .List<User>()
+                    .FirstOrDefault();
             }
+
             repository.Update(document);
 
             ViewBag.Success = $"Документ был успешно сохранен";

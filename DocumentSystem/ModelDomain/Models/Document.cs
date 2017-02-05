@@ -24,7 +24,7 @@ namespace Models
         {
             get
             {
-                int viewlenght = 15;
+                int viewlenght = 30;
                 return (Title.Length > viewlenght) ? $"{Title.Substring(0, viewlenght)}..." : Title;
             }
         }
