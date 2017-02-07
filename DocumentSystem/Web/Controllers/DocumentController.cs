@@ -64,17 +64,6 @@ namespace Web.Controllers
 
             var document = repository.Create();
 
-            if (model.Attachment != null)
-            {
-                if (model.Attachment.ContentLength > 0)
-                {
-                    string fileName = System.IO.Path.GetFileName(model.Attachment.FileName);
-                    document.FileName = fileName;
-                    model.Attachment.SaveAs(Server.MapPath("~/Files/" + fileName));
-                }
-            }
-
-
             document.Title = model.Name;
 
             document.CreationDate = DateTime.Now;
@@ -86,6 +75,18 @@ namespace Web.Controllers
                     .And(u=> u.Login == HttpContext.User.Identity.Name)
                     .List<User>()
                     .FirstOrDefault();
+            }
+
+            repository.Update(document);
+
+            if (model.Attachment != null)
+            {
+                if (model.Attachment.ContentLength > 0)
+                {
+                    string fileExtension = System.IO.Path.GetExtension(model.Attachment.FileName);
+                    document.FileName = $"{document.Id}{fileExtension}";
+                    model.Attachment.SaveAs(Server.MapPath("~/Files/" + document.FileName));
+                }
             }
 
             repository.Update(document);
