@@ -54,43 +54,29 @@ namespace Services
             var documents = new List<Document>();
             using (var session = NHibernateHelper.OpenSession())
             {
-                documents = session.CreateCriteria(typeof(Document))
-                    .Add(Expression.Or(
-                        Expression.Eq("Id", searchModel.Id),
-                        Expression.Eq("Id")
-                        ))
-
-                    .Add(Expression.Or(
-                        Expression.Like("Title", $"%{searchModel.Title}%"),
-                        Expression.IsNotEmpty("Title")
-                        ))
-                    .List<Document>().ToList();
-                // .Add(Expression.Eq("Author", searchModel.Author))
-
-
-
-//                So, u can do like this,
-
-//session = sessionFactory.getCurrentSession();
-//                Criteria crit = session.createCriteria(PersonEntity.class).add(
-//                                Restrictions.eq("FirstName", person.getFirstName())).add(
-//                                Restrictions.eq("email", person.getUser().getEmail()));
-//if(person.getLastName()!=null){
-//crit.add(Restrictions.eq("LastName", person.getLastName()));
-//}
-//    person=(PersonVO)crit.list();
-
- 
+                var criteria = session.CreateCriteria(typeof(Document)).CreateCriteria("Author", "a");
+                //var criteria = session.CreateCriteria(Document);
+                if (searchModel.Id.HasValue)
+                {
+                    criteria.Add(Expression.Eq("Id", searchModel.Id));
+                }
+                if (!string.IsNullOrEmpty(searchModel.Title))
+                {
+                    criteria.Add(Expression.InsensitiveLike("Title", $"%{searchModel.Title}%"));
+                }
+                if (!string.IsNullOrEmpty(searchModel.Author))
+                {
+                    criteria.Add(Expression.Or(
+                        Expression.InsensitiveLike("a.FirstName", $"%{searchModel.Author}%"),
+                        Expression.InsensitiveLike("a.LastName", $"%{searchModel.Author}%")
+                        ));
+                }
 
 
-                //documents = criteria.List<Document>().ToList();
-                //if (searchModel.Id.HasValue)
-                //    documents = documents.Where(d => d.Id == searchModel.Id).ToList(); 
-                //if (!String.IsNullOrEmpty(searchModel.Title))
-                //    documents = documents.Where(d => d.Title.ToLower().Contains(searchModel.Title.ToLower())).ToList();
-                //if(!String.IsNullOrEmpty(searchModel.Author))
-                //    documents = documents.Where(d => d.Author.FullName.ToLower().Contains(searchModel.Author.ToLower())).ToList();
+
+                documents = criteria.List<Document>().ToList();
             }
+
             return documents;
         }
     }
