@@ -1,7 +1,6 @@
-﻿@model IEnumerable<Models.Document>
-
-@ViewBag.sortColumn
-@ViewBag.Login
+﻿@*@model IEnumerable<Models.Document>*@
+@model PagedList.IPagedList<Models.Document>
+@using PagedList.Mvc;
 
 <h3>Список документов</h3>
 <p>
@@ -11,19 +10,19 @@
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("Id", "Index", new { sortColumn = "Id" })
+            @Html.ActionLink("Id", "Index", new { page = Model.PageNumber, sortColumn = "Id" })
         </th>
         <th>
-            @Html.ActionLink("Название", "Index", new { sortColumn = "Title" })
+            @Html.ActionLink("Название", "Index", new { page = Model.PageNumber, sortColumn = "Title" })
         </th>
         <th>
-           @Html.ActionLink("Автор", "Index", new { sortColumn = "Author" })
+           @Html.ActionLink("Автор", "Index", new { page = Model.PageNumber, sortColumn = "Author" })
         </th>
         <th>
-            @Html.ActionLink("Дата", "Index", new { sortColumn = "CreationDate" })
+            @Html.ActionLink("Дата", "Index", new { page = Model.PageNumber, sortColumn = "CreationDate" })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Path)
+            Файл
         </th>
     </tr>
 
@@ -51,3 +50,7 @@
     }
 
 </table>
+<br/>
+Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new {  page, sortColumn = ViewBag.sortColumn }))

@@ -54,21 +54,20 @@ namespace Services
             var documents = new List<Document>();
             using (var session = NHibernateHelper.OpenSession())
             {
-                var criteria = session.CreateCriteria(typeof(Document)).CreateCriteria("Author", "a");
-                //var criteria = session.CreateCriteria(Document);
+                var criteria = session.CreateCriteria(typeof(Document), "d").CreateCriteria("Author", "a");
                 if (searchModel.Id.HasValue)
                 {
-                    criteria.Add(Expression.Eq("Id", searchModel.Id));
+                    criteria.Add(Restrictions.Eq("d.Id", searchModel.Id));
                 }
                 if (!string.IsNullOrEmpty(searchModel.Title))
                 {
-                    criteria.Add(Expression.InsensitiveLike("Title", $"%{searchModel.Title}%"));
+                    criteria.Add(Restrictions.InsensitiveLike("d.Title", searchModel.Title, MatchMode.Anywhere));
                 }
                 if (!string.IsNullOrEmpty(searchModel.Author))
                 {
-                    criteria.Add(Expression.Or(
-                        Expression.InsensitiveLike("a.FirstName", $"%{searchModel.Author}%"),
-                        Expression.InsensitiveLike("a.LastName", $"%{searchModel.Author}%")
+                    criteria.Add(Restrictions.Or(
+                         Restrictions.InsensitiveLike("a.FirstName", searchModel.Author, MatchMode.Anywhere),
+                         Restrictions.InsensitiveLike("a.LastName", searchModel.Author, MatchMode.Anywhere)
                         ));
                 }
 

@@ -1,5 +1,6 @@
 ﻿using Helpers;
 using Models;
+using PagedList;
 using Services;
 using System;
 using System.Collections.Generic;
@@ -27,26 +28,49 @@ namespace Web.Controllers
         {
             IEnumerable<Document> documents;
             documents = repository.Search(searchModel);
-            return View("Index", documents);
+            int pageSize = 5;
+            int pageNumber = 1;
+            return View("Index", documents.ToPagedList(pageNumber, pageSize));
         }
         //[Authorize]
-        public ActionResult Index(string sortColumn)
+        public ActionResult Index(string sortColumn, int? page)
         {
-            //if (HttpContext.User.Identity.IsAuthenticated)
             {
                 ViewBag.Login = "Ваш логин: " + HttpContext.User.Identity.Name;
+                if (!string.IsNullOrEmpty(sortColumn))
+                {
+                    ViewBag.sortColumn = sortColumn;
+                }
             }
             IEnumerable<Document> documents;
-            if (sortColumn == "Author")
+
+            switch (sortColumn)
             {
-                documents = repository.GetAll().OrderBy(p => p.Author.LastName);
-            }
-            else
-            {
-                documents = repository.GetAll().OrderBy(p => p.GetType().GetProperty(sortColumn ?? "CreationDate").GetValue(p, null));
+                case "Author":
+                    documents = repository.GetAll().OrderBy(p => p.Author.LastName);
+                    break;
+
+                case "CreationDate":
+                    documents = repository.GetAll().OrderBy(p => p.CreationDate);
+                    break;
+
+                case "Id":
+                    documents = repository.GetAll().OrderBy(p => p.Id);
+                    break;
+
+                case "Title":
+                    documents = repository.GetAll().OrderBy(p => p.Title);
+                    break;
+
+                default:
+                    documents = repository.GetAll().OrderBy(p => p.CreationDate);
+                    break;
             }
 
-            return View(documents);
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            return View(documents.ToPagedList(pageNumber, pageSize));
+
         }
 
         public ActionResult Create()
@@ -72,7 +96,7 @@ namespace Web.Controllers
             using (var session = NHibernateHelper.OpenSession())
             {
                 document.Author = session.QueryOver<User>()
-                    .And(u=> u.Login == HttpContext.User.Identity.Name)
+                    .And(u => u.Login == HttpContext.User.Identity.Name)
                     .List<User>()
                     .FirstOrDefault();
             }
